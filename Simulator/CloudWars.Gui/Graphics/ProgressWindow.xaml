@@ -1,0 +1,7 @@
+﻿<Window x:Class="CloudWars.Graphics.ProgressWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="ProgressWindow" Width="300" SizeToContent="Height" WindowStartupLocation="CenterScreen" Topmost="True">
+
+	<StackPanel Margin="10" Name="List">
+		<TextBlock HorizontalAlignment="Center" Name="StatusText" Margin="10" Foreground="Black" Text="Waiting for players to connect..." FontSize="16" />
+		<Button Content="Cancel" Height="23" Name="Cancel" Width="75" Click="OnCancel" />
+	</StackPanel>
+</Window>

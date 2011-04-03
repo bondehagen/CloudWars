@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using CloudWars.Core;
 using CloudWars.Core.Graphic;
 
 namespace CloudWars.Graphics
@@ -13,12 +12,10 @@ namespace CloudWars.Graphics
     {
         private readonly Canvas canvas;
         private readonly string[] colors;
-        private readonly GameSettings settings;
         private int shapeCounter;
 
         public GraphicManager(Canvas canvas)
         {
-            this.settings = settings;
             this.canvas = canvas;
             colors = new[] { "blue", "orange", "purple", "red" };
             shapeCounter = -1;

@@ -17,15 +17,12 @@ namespace CloudWars.Graphics
         {
             Loaded += WindowLoaded;
             KeyDown += WindowKeyDown;
-            
+
             this.settings = settings;
             InitializeComponents();
         }
 
         public Canvas Canvas { get; set; }
-
-       // public event EventHandler Draw;
-
 
         private void InitializeComponents()
         {

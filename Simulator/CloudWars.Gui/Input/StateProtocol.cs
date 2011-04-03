@@ -41,20 +41,20 @@ namespace CloudWars.Input
 
         private static string cloudLine(RainCloud cloud)
         {
-            string x = ((float)cloud.position.X).ToString(NumberFormatInfo.InvariantInfo);
-            string y = ((float)cloud.position.Y).ToString(NumberFormatInfo.InvariantInfo);
-            string vx = ((float)cloud.velocity.X).ToString(NumberFormatInfo.InvariantInfo);
-            string vy = ((float)cloud.velocity.Y).ToString(NumberFormatInfo.InvariantInfo);
+            string x = ((float) cloud.position.X).ToString(NumberFormatInfo.InvariantInfo);
+            string y = ((float) cloud.position.Y).ToString(NumberFormatInfo.InvariantInfo);
+            string vx = ((float) cloud.velocity.X).ToString(NumberFormatInfo.InvariantInfo);
+            string vy = ((float) cloud.velocity.Y).ToString(NumberFormatInfo.InvariantInfo);
             string vapor = cloud.vapor.ToString(NumberFormatInfo.InvariantInfo);
             return string.Format("RAINCLOUD {0} {1} {2} {3} {4}", x, y, vx, vy, vapor);
         }
 
         private static string cloudLine(Thunderstorm cloud)
         {
-            string x = ((float)cloud.position.X).ToString(NumberFormatInfo.InvariantInfo);
-            string y = ((float)cloud.position.Y).ToString(NumberFormatInfo.InvariantInfo);
-            string vx = ((float)cloud.velocity.X).ToString(NumberFormatInfo.InvariantInfo);
-            string vy = ((float)cloud.velocity.Y).ToString(NumberFormatInfo.InvariantInfo);
+            string x = ((float) cloud.position.X).ToString(NumberFormatInfo.InvariantInfo);
+            string y = ((float) cloud.position.Y).ToString(NumberFormatInfo.InvariantInfo);
+            string vx = ((float) cloud.velocity.X).ToString(NumberFormatInfo.InvariantInfo);
+            string vy = ((float) cloud.velocity.Y).ToString(NumberFormatInfo.InvariantInfo);
             string vapor = cloud.vapor.ToString(NumberFormatInfo.InvariantInfo);
             return string.Format("THUNDERSTORM {0} {1} {2} {3} {4}", x, y, vx, vy, vapor);
         }

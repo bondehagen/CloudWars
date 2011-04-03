@@ -11,7 +11,7 @@ namespace CloudWars
 {
     public class CloudWars : Application
     {
-        private GameSettings settings;
+        private readonly GameSettings settings;
         private GameManager gameManager;
 
         public CloudWars()
@@ -47,13 +47,15 @@ namespace CloudWars
             }
         }
 
-        private void StartGame() {
+        private void StartGame()
+        {
             gameManager = new GameManager(settings);
             gameManager.Close += OnGameManagerClose;
             gameManager.Start();
         }
 
-        private bool ShowSettingsWindow() {
+        private bool ShowSettingsWindow()
+        {
             //settings = new GameSettings();
             SettingsWindow settingsWindow = new SettingsWindow(settings);
             bool? result = settingsWindow.ShowDialog();
@@ -80,9 +82,9 @@ namespace CloudWars
         private static CloudWars ExtractSettingsFromArgs(string[] args)
         {
             GameSettings settings = new GameSettings
-            {
-                Port = 1986
-            };
+                                        {
+                                            Port = 1986
+                                        };
             List<NewPlayer> newPlayers = new List<NewPlayer>();
             if (args.Any(a => a.ToLower().Contains("ai")))
             {

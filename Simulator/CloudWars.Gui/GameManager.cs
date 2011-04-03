@@ -10,19 +10,20 @@ namespace CloudWars
 {
     public class GameManager
     {
+        public delegate void CloseGameHandler();
         private readonly GameSettings settings;
+        public bool IsClosed;
         private GameLoop gameLoop;
         private GameWindow gameWindow;
         private SocketManager socketManager;
         private World world;
-        public delegate void CloseGameHandler();
-        public event CloseGameHandler Close;
-        public bool IsClosed;
 
         public GameManager(GameSettings settings)
         {
             this.settings = settings;
         }
+
+        public event CloseGameHandler Close;
 
         private void SocketCancel()
         {
@@ -38,7 +39,7 @@ namespace CloudWars
 
             gameWindow = new GameWindow(settings);
             gameWindow.Closed += WindowClosed;
-            
+
 
             SocketFactory socketGame = new SocketFactory(settings);
             socketGame.Cancel += SocketCancel;
@@ -46,8 +47,8 @@ namespace CloudWars
 
             GraphicManager graphicManager = new GraphicManager(gameWindow.Canvas);
             InputFactory inputFactory = new InputFactory(gameWindow, socketManager);
-            
-            if(IsClosed)
+
+            if (IsClosed)
                 return;
 
             world = new World(settings, inputFactory, graphicManager);

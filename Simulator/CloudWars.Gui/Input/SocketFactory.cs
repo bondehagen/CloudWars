@@ -11,29 +11,29 @@ namespace CloudWars.Input
 {
     public class SocketFactory
     {
-        #region Delegates
-
-        public delegate void CancelEvent();
-
-        #endregion
-
+        private readonly GameSettings settings;
         private readonly int maxClients;
-        private readonly SocketManager socketManager;
+        private SocketManager socketManager;
+        public delegate void CancelEvent();
+        public event CancelEvent Cancel;
 
         public SocketFactory(GameSettings settings)
         {
+            this.settings = settings;
             maxClients = settings.Players.Count(p => p.Type == CloudType.AI);
-            if (maxClients > 0)
-                socketManager = new SocketManager(maxClients, settings.Port);
         }
 
-        public event CancelEvent Cancel;
 
-        private void ListenForConnections()
+        public SocketManager CreateSocketManager()
         {
+            if (maxClients <= 0)
+                return null;
+
+            socketManager = new SocketManager(maxClients, settings.Port);
             socketManager.Start();
+
             WindowThread<ProgressWindow> windowThread = new WindowThread<ProgressWindow>();
-            windowThread.Update(p => p.Closed += (sender, args) => socketManager.Stop());
+            windowThread.Update(p => p.Closed += (sender, args) => Cancel());
             windowThread.Start();
 
             while (socketManager.CountClients < maxClients)
@@ -58,16 +58,7 @@ namespace CloudWars.Input
                 Thread.Sleep(10);
             }
             windowThread.Stop();
-        }
-
-        public SocketManager CreateSocketManager()
-        {
-            if (maxClients > 0)
-            {
-                ListenForConnections();
-                return socketManager;
-            }
-            return null;
+            return socketManager;
         }
     }
 }

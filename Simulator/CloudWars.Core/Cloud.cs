@@ -117,12 +117,12 @@ namespace CloudWars.Core
                 position.Y = Radius;
                 velocity.Y = Math.Abs(velocity.Y) * 0.6;
             }
-            if (position.X + Radius > 1280)
+            if (position.X + Radius > world.Settings.Width)
             {
                 position.X = world.Settings.Width - Radius;
                 velocity.X = -Math.Abs(velocity.X) * 0.6;
             }
-            if (position.Y + Radius > 720)
+            if (position.Y + Radius > world.Settings.Height)
             {
                 position.Y = world.Settings.Height - Radius;
                 velocity.Y = -Math.Abs(velocity.Y) * 0.6;

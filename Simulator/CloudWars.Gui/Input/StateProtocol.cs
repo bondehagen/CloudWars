@@ -14,11 +14,11 @@ namespace CloudWars.Input
             builder.AppendLine(youIndexLine(world, player));
             foreach (Thunderstorm cloud in world.Thunderstorms)
             {
-                builder.AppendLine(cloudLine(cloud));
+                builder.AppendLine(cloudLine("THUNDERSTORM", cloud));
             }
             foreach (RainCloud cloud in world.RainClouds)
             {
-                builder.AppendLine(cloudLine(cloud));
+                builder.AppendLine(cloudLine("RAINCLOUD", cloud));
             }
             builder.AppendLine(endStateLine());
             return builder.ToString();
@@ -39,29 +39,24 @@ namespace CloudWars.Input
             return "END_STATE";
         }
 
-        private static string cloudLine(RainCloud cloud)
+        private static string cloudLine(string cloudType, Cloud cloud)
         {
-            string x = ((float) cloud.position.X).ToString(NumberFormatInfo.InvariantInfo);
-            string y = ((float) cloud.position.Y).ToString(NumberFormatInfo.InvariantInfo);
-            string vx = ((float) cloud.velocity.X).ToString(NumberFormatInfo.InvariantInfo);
-            string vy = ((float) cloud.velocity.Y).ToString(NumberFormatInfo.InvariantInfo);
-            string vapor = cloud.vapor.ToString(NumberFormatInfo.InvariantInfo);
-            return string.Format("RAINCLOUD {0} {1} {2} {3} {4}", x, y, vx, vy, vapor);
+            string x = ToInvariantString(cloud.position.X);
+            string y = ToInvariantString(cloud.position.Y);
+            string vx = ToInvariantString(cloud.velocity.X);
+            string vy = ToInvariantString(cloud.velocity.Y);
+            string vapor = ToInvariantString(cloud.vapor);
+            return string.Join(" ", cloudType, x, y, vx, vy, vapor);
         }
 
-        private static string cloudLine(Thunderstorm cloud)
+        private static string ToInvariantString(double d)
         {
-            string x = ((float) cloud.position.X).ToString(NumberFormatInfo.InvariantInfo);
-            string y = ((float) cloud.position.Y).ToString(NumberFormatInfo.InvariantInfo);
-            string vx = ((float) cloud.velocity.X).ToString(NumberFormatInfo.InvariantInfo);
-            string vy = ((float) cloud.velocity.Y).ToString(NumberFormatInfo.InvariantInfo);
-            string vapor = cloud.vapor.ToString(NumberFormatInfo.InvariantInfo);
-            return string.Format("THUNDERSTORM {0} {1} {2} {3} {4}", x, y, vx, vy, vapor);
+            return ((float) d).ToString(NumberFormatInfo.InvariantInfo);
         }
 
-        private static void AppendFScriptStreamStyle(this StringBuilder builder, string line)
+        /*private static void AppendFScriptStreamStyle(this StringBuilder builder, string line)
         {
             builder.AppendFormat("{0}{1}\0\0\0{2}", (char) 3, (char) line.Length, line);
-        }
+        }*/
     }
 }

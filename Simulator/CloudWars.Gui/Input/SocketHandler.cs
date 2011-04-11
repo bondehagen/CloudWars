@@ -139,13 +139,10 @@ namespace CloudWars.Input
                     continue;
 
                 if (line.Key.Equals("WIND"))
-                {
                     SendMessage(player.Wind(ParseVector(line.Value)) ? "OK\n" : "IGNORED\n");
-                }
+
                 if (line.Key.Equals("GET_STATE"))
-                {
                     this.SendMessage(StateProtocol.Create(state.player, state.world, state.iteration));
-                }
             }
         }
 

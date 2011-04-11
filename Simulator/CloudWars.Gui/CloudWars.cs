@@ -3,21 +3,35 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using CloudWars.Core;
 using CloudWars.Core.Settings;
 using CloudWars.Graphics;
+using CloudWars.Helpers;
+using CloudWars.Input;
+using CloudWars.Network;
 
 namespace CloudWars
 {
     public class CloudWars : Application
     {
         private readonly GameSettings settings;
-        private GameManager gameManager;
+        private GameLoop gameLoop;
+        private GameWindow gameWindow;
+        public bool hasClosed;
+        private SocketManager socketManager;
+        private World world;
 
         public CloudWars()
         {
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            Startup += OnStart;
+            Startup += (sender, args) =>
+                           {
+                               if ((settings.Players != null && settings.Players.Any()) || ShowSettingsWindow())
+                                   Start();
+                               else
+                                   Shutdown();
+                           };
         }
 
 
@@ -26,60 +40,83 @@ namespace CloudWars
             this.settings = settings;
         }
 
-        private void OnStart(object sender, StartupEventArgs e)
+        public void Start()
         {
-            try
-            {
-                if (settings.Players != null && !settings.Players.Any())
-                {
-                    bool start = ShowSettingsWindow();
-                    if (!start)
-                    {
-                        Shutdown();
-                        return;
-                    }
-                }
-                StartGame();
-            }
-            catch (Exception)
-            {
-                Shutdown();
-            }
+            hasClosed = false;
+            gameLoop = new DispatcherTimerGameLoop(1000 / 100);
+            gameLoop.Update += Update;
+
+            gameWindow = new GameWindow(settings);
+            gameWindow.Closed += (sender, args) => Stop();
+
+            SocketFactory socketGame = new SocketFactory(settings);
+            socketGame.Cancel += Stop;
+            socketManager = socketGame.CreateSocketManager();
+
+            GraphicManager graphicManager = new GraphicManager(gameWindow.Canvas);
+            InputFactory inputFactory = new InputFactory(gameWindow.Canvas, socketManager);
+
+            if (hasClosed)
+                return;
+
+            world = new World(settings, inputFactory, graphicManager);
+            CompositionTarget.Rendering += (sender, args) => world.Draw();
+            world.Start();
+            gameWindow.Show();
+            gameLoop.Start();
         }
 
-        private void StartGame()
+        private void Update(TimeSpan elapsed)
         {
-            gameManager = new GameManager(settings);
-            gameManager.Close += OnGameManagerClose;
-            gameManager.Start();
+            // Update game logic
+            world.Update(elapsed);
+
+            if (world.IsFinished) Stop();
         }
+
+
+        public void Stop()
+        {
+            hasClosed = true;
+            if (socketManager != null)
+                socketManager.Stop();
+
+            gameLoop.Stop();
+
+            if (gameWindow.IsEnabled)
+                gameWindow.Close();
+
+            if (ShowSettingsWindow())
+                Start();
+            else
+                Shutdown();
+        }
+
 
         private bool ShowSettingsWindow()
         {
-            //settings = new GameSettings();
             SettingsWindow settingsWindow = new SettingsWindow(settings);
             bool? result = settingsWindow.ShowDialog();
             return result != null && (bool) result;
         }
 
-        private void OnGameManagerClose()
-        {
-            bool start = ShowSettingsWindow();
-            if (start)
-                StartGame();
-            else
-                Shutdown();
-        }
 
         [STAThreadAttribute]
         [DebuggerNonUserCode]
         public static void Main(string[] args)
         {
             CloudWars app = ExtractSettingsFromArgs(args);
-            app.Run();
+            try
+            {
+                app.Run();
+            }
+            catch (Exception)
+            {
+                app.Shutdown();
+            }
         }
 
-        private static CloudWars ExtractSettingsFromArgs(string[] args)
+        private static CloudWars ExtractSettingsFromArgs(IEnumerable<string> args)
         {
             GameSettings settings = new GameSettings
                                         {

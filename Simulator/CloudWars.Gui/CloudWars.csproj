@@ -73,7 +73,6 @@
     <Compile Include="Input\SocketHandler.cs" />
     <Compile Include="Input\StateProtocol.cs" />
     <Compile Include="Graphics\GameWindow.cs" />
-    <Compile Include="GameManager.cs" />
     <Compile Include="Helpers\PointExtensions.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\WindowThread.cs" />

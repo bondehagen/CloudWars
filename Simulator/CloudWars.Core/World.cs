@@ -99,10 +99,10 @@ namespace CloudWars.Core
                     Thunderstorms.RemoveAt(i--);
             }
             // Remove dead rainclouds
-            for (int i = 0; i < Clouds.Count; i++)
+            for (int i = 0; i < RainClouds.Count; i++)
             {
-                if (Clouds[i].IsDead())
-                    Clouds.RemoveAt(i--);
+                if (RainClouds[i].IsDead())
+                    RainClouds.RemoveAt(i--);
             }
             iteration++;
         }
